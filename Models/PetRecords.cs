@@ -5,7 +5,7 @@ using System.Web;
 
 namespace u22710362_HW2.Models
 {
-	public class PetRecordsVM
+	public class PetRecords
 	{
 		public List<Pet> Pets { get; set; }
 		public List<User> Users { get; set; }
@@ -16,7 +16,7 @@ namespace u22710362_HW2.Models
 		public decimal TotalDonations { get; set; }
 		public decimal DonationGoal { get; set; }
 		public int TotalAdoptions { get; set; }
-		public PetRecordsVM()
+		public PetRecords()
 		{
 			DonationGoal = 25000.00m;
 		}
