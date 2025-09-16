@@ -66,14 +66,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving all pets: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving all pets: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving all pets: {ex.Message}", ex);
@@ -140,14 +132,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving filtered pets: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving filtered pets: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving filtered pets: {ex.Message}", ex);
@@ -209,14 +193,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving pet with ID {id}: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving pet with ID {id}: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving pet with ID {id}: {ex.Message}", ex);
@@ -255,14 +231,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving all users: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving all users: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving all users: {ex.Message}", ex);
@@ -298,14 +266,6 @@ namespace u22710362_HW2.Models
                         }
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving pet types: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving pet types: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
@@ -344,14 +304,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving pet breeds: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving pet breeds: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving pet breeds: {ex.Message}", ex);
@@ -387,14 +339,6 @@ namespace u22710362_HW2.Models
                         }
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving locations: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving locations: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
@@ -437,14 +381,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error adopting pet ID {petId}: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw ex; // Re-throw business logic exceptions as-is
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error adopting pet ID {petId}: {ex.Message}", ex);
@@ -453,7 +389,6 @@ namespace u22710362_HW2.Models
 
         public void postPet(string name, int petTypeId, int breedId, int locationId, int age, decimal weight, string gender, string petStory, int postedByUserId, string b64Image)
         {
-            // Input validation
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException("Pet name cannot be empty", nameof(name));
@@ -529,18 +464,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                if (ex.Number == 547) // Foreign key constraint violation
-                {
-                    throw new InvalidOperationException("Invalid pet type, breed, location, or user ID provided.", ex);
-                }
-                throw new Exception($"Database error posting pet: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw ex; // Re-throw business logic exceptions as-is
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error posting pet: {ex.Message}", ex);
@@ -588,10 +511,6 @@ namespace u22710362_HW2.Models
                 }
                 throw new Exception($"Database error making donation: {ex.Message}", ex);
             }
-            catch (InvalidOperationException ex)
-            {
-                throw ex; // Re-throw business logic exceptions as-is
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error making donation: {ex.Message}", ex);
@@ -628,14 +547,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving donations: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving donations: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error retrieving donations: {ex.Message}", ex);
@@ -664,14 +575,6 @@ namespace u22710362_HW2.Models
                         }
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error calculating total donations: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error calculating total donations: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
@@ -706,15 +609,6 @@ namespace u22710362_HW2.Models
             {
                 throw new Exception($"Database error calculating total adoptions: {ex.Message}", ex);
             }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error calculating total adoptions: {ex.Message}", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Unexpected error calculating total adoptions: {ex.Message}", ex);
-            }
-
             return total;
         }
 
@@ -749,14 +643,6 @@ namespace u22710362_HW2.Models
                         }
                     }
                 }
-            }
-            catch (SqlException ex)
-            {
-                throw new Exception($"Database error retrieving adopted pets: {ex.Message}", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception($"Connection error retrieving adopted pets: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
