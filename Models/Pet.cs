@@ -13,7 +13,7 @@ namespace u22710362_HW2.Models
 		public string PetTypeName { get; set; }
 		public int BreedID { get; set; }
 		public string BreedName { get; set; }
-		public string LocationID { get; set; }
+		public int LocationID { get; set; }
 		public string LocationName { get;set; }
 		public int Age { get; set; }
 		public decimal Weight { get; set; }

@@ -19,444 +19,750 @@ namespace u22710362_HW2.Models
         public List<Pet> getAllPets()
         {
             List<Pet> pets = new List<Pet>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
-                                pt.TypeName, pb.BreedName, l.LocationName, 
-                                u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName,
-                                u2.FirstName as AdoptedByFirstName, u2.LastName as AdoptedByLastName
-                                FROM Pets p
-                                INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
-                                INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
-                                INNER JOIN Locations l ON p.LocationID = l.ID
-                                INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
-                                LEFT JOIN Users u2 ON p.AdoptedByUserID = u2.ID";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
+                                    pt.TypeName, pb.BreedName, l.LocationName, 
+                                    u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName,
+                                    u2.FirstName as AdoptedByFirstName, u2.LastName as AdoptedByLastName
+                                    FROM Pets p
+                                    INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
+                                    INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
+                                    INNER JOIN Locations l ON p.LocationID = l.ID
+                                    INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
+                                    LEFT JOIN Users u2 ON p.AdoptedByUserID = u2.ID";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Pet pet = new Pet
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),              // p.ID
-                                Name = reader.GetString(1),           // p.Name
-                                Age = reader.GetInt32(2),             // p.Age
-                                Weight = reader.GetDecimal(3),        // p.Weight
-                                Gender = reader.GetString(4),         // p.Gender
-                                PetStory = reader.GetString(5),       // p.PetStory
-                                Status = reader.GetString(6),         // p.Status
-                                B64Image = reader.GetString(7),       // p.B64Image
-                                PetTypeName = reader.GetString(8),    // pt.TypeName
-                                BreedName = reader.GetString(9),      // pb.BreedName
-                                LocationName = reader.GetString(10), // l.LocationName
-                                PostedByFirstName = reader.GetString(11), // u1.FirstName
-                                PostedByLastName = reader.GetString(12),  // u1.LastName
-                                AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13), // u2.FirstName
-                                AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)   // u2.LastName
-                            };
-                            pets.Add(pet);
+                                Pet pet = new Pet
+                                {
+                                    ID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    Age = reader.GetInt32(2),
+                                    Weight = reader.GetDecimal(3),
+                                    Gender = reader.GetString(4),
+                                    PetStory = reader.GetString(5),
+                                    Status = reader.GetString(6),
+                                    B64Image = reader.GetString(7),
+                                    PetTypeName = reader.GetString(8),
+                                    BreedName = reader.GetString(9),
+                                    LocationName = reader.GetString(10),
+                                    PostedByFirstName = reader.GetString(11),
+                                    PostedByLastName = reader.GetString(12),
+                                    AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13),
+                                    AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)
+                                };
+                                pets.Add(pet);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving all pets: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving all pets: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving all pets: {ex.Message}", ex);
+            }
+
             return pets;
         }
 
         public List<Pet> getFilteredPets(string petType, string breed, string location)
         {
             List<Pet> pets = new List<Pet>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
-                                pt.TypeName, pb.BreedName, l.LocationName, 
-                                u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName,
-                                u2.FirstName as AdoptedByFirstName, u2.LastName as AdoptedByLastName
-                                FROM Pets p
-                                INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
-                                INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
-                                INNER JOIN Locations l ON p.LocationID = l.ID
-                                INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
-                                LEFT JOIN Users u2 ON p.AdoptedByUserID = u2.ID
-                                WHERE (@petType = 'All' OR pt.TypeName = @petType)
-                                AND (@breed = 'All' OR pb.BreedName = @breed)
-                                AND (@location = 'All' OR l.LocationName = @location)";
-
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@petType", petType);
-                    cmd.Parameters.AddWithValue("@breed", breed);
-                    cmd.Parameters.AddWithValue("@location", location);
+                    connection.Open();
+                    string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
+                                    pt.TypeName, pb.BreedName, l.LocationName, 
+                                    u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName,
+                                    u2.FirstName as AdoptedByFirstName, u2.LastName as AdoptedByLastName
+                                    FROM Pets p
+                                    INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
+                                    INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
+                                    INNER JOIN Locations l ON p.LocationID = l.ID
+                                    INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
+                                    LEFT JOIN Users u2 ON p.AdoptedByUserID = u2.ID
+                                    WHERE p.Status = 'Available'
+                                    AND (@petType = 'All' OR pt.TypeName = @petType)
+                                    AND (@breed = 'All' OR pb.BreedName = @breed)
+                                    AND (@location = 'All' OR l.LocationName = @location)";
 
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        cmd.Parameters.AddWithValue("@petType", petType ?? "All");
+                        cmd.Parameters.AddWithValue("@breed", breed ?? "All");
+                        cmd.Parameters.AddWithValue("@location", location ?? "All");
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Pet pet = new Pet
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),              // p.ID
-                                Name = reader.GetString(1),           // p.Name
-                                Age = reader.GetInt32(2),             // p.Age
-                                Weight = reader.GetDecimal(3),        // p.Weight
-                                Gender = reader.GetString(4),         // p.Gender
-                                PetStory = reader.GetString(5),       // p.PetStory
-                                Status = reader.GetString(6),         // p.Status
-                                B64Image = reader.GetString(7),       // p.B64Image
-                                PetTypeName = reader.GetString(8),    // pt.TypeName
-                                BreedName = reader.GetString(9),      // pb.BreedName
-                                LocationName = reader.GetString(10), // l.LocationName
-                                PostedByFirstName = reader.GetString(11), // u1.FirstName
-                                PostedByLastName = reader.GetString(12),  // u1.LastName
-                                AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13), // u2.FirstName
-                                AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)   // u2.LastName
-                            };
-                            pets.Add(pet);
+                                Pet pet = new Pet
+                                {
+                                    ID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    Age = reader.GetInt32(2),
+                                    Weight = reader.GetDecimal(3),
+                                    Gender = reader.GetString(4),
+                                    PetStory = reader.GetString(5),
+                                    Status = reader.GetString(6),
+                                    B64Image = reader.GetString(7),
+                                    PetTypeName = reader.GetString(8),
+                                    BreedName = reader.GetString(9),
+                                    LocationName = reader.GetString(10),
+                                    PostedByFirstName = reader.GetString(11),
+                                    PostedByLastName = reader.GetString(12),
+                                    AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13),
+                                    AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)
+                                };
+                                pets.Add(pet);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving filtered pets: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving filtered pets: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving filtered pets: {ex.Message}", ex);
+            }
+
             return pets;
         }
 
         public Pet getPetById(int id)
         {
-            Pet pet = null;
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+            if (id <= 0)
             {
-                connection.Open();
-                string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
-                                pt.TypeName, pb.BreedName, l.LocationName, 
-                                u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName
-                                FROM Pets p
-                                INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
-                                INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
-                                INNER JOIN Locations l ON p.LocationID = l.ID
-                                INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
-                                WHERE p.ID = @id";
+                throw new ArgumentException("Pet ID must be greater than zero", nameof(id));
+            }
 
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+            Pet pet = null;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = @"SELECT p.ID, p.Name, p.Age, p.Weight, p.Gender, p.PetStory, p.Status, p.B64Image,
+                                    pt.TypeName, pb.BreedName, l.LocationName, 
+                                    u1.FirstName as PostedByFirstName, u1.LastName as PostedByLastName
+                                    FROM Pets p
+                                    INNER JOIN PetTypes pt ON p.PetTypeID = pt.ID
+                                    INNER JOIN PetBreeds pb ON p.BreedID = pb.ID
+                                    INNER JOIN Locations l ON p.LocationID = l.ID
+                                    INNER JOIN Users u1 ON p.PostedByUserID = u1.ID
+                                    WHERE p.ID = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        if (reader.Read())
+                        cmd.Parameters.AddWithValue("@id", id);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            pet = new Pet
+                            if (reader.Read())
                             {
-                                ID = reader.GetInt32(0),              // p.ID
-                                Name = reader.GetString(1),           // p.Name
-                                Age = reader.GetInt32(2),             // p.Age
-                                Weight = reader.GetDecimal(3),        // p.Weight
-                                Gender = reader.GetString(4),         // p.Gender
-                                PetStory = reader.GetString(5),       // p.PetStory
-                                Status = reader.GetString(6),         // p.Status
-                                B64Image = reader.GetString(7),       // p.B64Image
-                                PetTypeName = reader.GetString(8),    // pt.TypeName
-                                BreedName = reader.GetString(9),      // pb.BreedName
-                                LocationName = reader.GetString(10), // l.LocationName
-                                PostedByFirstName = reader.GetString(11), // u1.FirstName
-                                PostedByLastName = reader.GetString(12)   // u1.LastName
-                            };
+                                pet = new Pet
+                                {
+                                    ID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                    Age = reader.GetInt32(2),
+                                    Weight = reader.GetDecimal(3),
+                                    Gender = reader.GetString(4),
+                                    PetStory = reader.GetString(5),
+                                    Status = reader.GetString(6),
+                                    B64Image = reader.GetString(7),
+                                    PetTypeName = reader.GetString(8),
+                                    BreedName = reader.GetString(9),
+                                    LocationName = reader.GetString(10),
+                                    PostedByFirstName = reader.GetString(11),
+                                    PostedByLastName = reader.GetString(12)
+                                };
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving pet with ID {id}: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving pet with ID {id}: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving pet with ID {id}: {ex.Message}", ex);
+            }
+
             return pet;
         }
 
         public List<User> getAllUsers()
         {
             List<User> users = new List<User>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ID, FirstName, LastName, PhoneNumber FROM Users";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = "SELECT ID, FirstName, LastName, PhoneNumber FROM Users";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            User user = new User
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),         // ID
-                                FirstName = reader.GetString(1), // FirstName
-                                LastName = reader.GetString(2),  // LastName
-                                PhoneNumber = reader.GetString(3) // PhoneNumber
-                            };
-                            users.Add(user);
+                                User user = new User
+                                {
+                                    ID = reader.GetInt32(0),
+                                    FirstName = reader.GetString(1),
+                                    LastName = reader.GetString(2),
+                                    PhoneNumber = reader.GetString(3)
+                                };
+                                users.Add(user);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving all users: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving all users: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving all users: {ex.Message}", ex);
+            }
+
             return users;
         }
 
         public List<PetType> getAllPetTypes()
         {
             List<PetType> petTypes = new List<PetType>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ID, TypeName FROM PetTypes";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = "SELECT ID, TypeName FROM PetTypes";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            PetType petType = new PetType
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),        // ID
-                                TypeName = reader.GetString(1)  // TypeName
-                            };
-                            petTypes.Add(petType);
+                                PetType petType = new PetType
+                                {
+                                    ID = reader.GetInt32(0),
+                                    TypeName = reader.GetString(1)
+                                };
+                                petTypes.Add(petType);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving pet types: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving pet types: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving pet types: {ex.Message}", ex);
+            }
+
             return petTypes;
         }
 
         public List<PetBreed> getAllPetBreeds()
         {
             List<PetBreed> petBreeds = new List<PetBreed>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ID, BreedName, PetTypeID FROM PetBreeds";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = "SELECT ID, BreedName, PetTypeID FROM PetBreeds";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            PetBreed petBreed = new PetBreed
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),        // ID
-                                BreedName = reader.GetString(1), // BreedName
-                                PetTypeID = reader.GetInt32(2)   // PetTypeID
-                            };
-                            petBreeds.Add(petBreed);
+                                PetBreed petBreed = new PetBreed
+                                {
+                                    ID = reader.GetInt32(0),
+                                    BreedName = reader.GetString(1),
+                                    PetTypeID = reader.GetInt32(2)
+                                };
+                                petBreeds.Add(petBreed);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving pet breeds: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving pet breeds: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving pet breeds: {ex.Message}", ex);
+            }
+
             return petBreeds;
         }
 
         public List<Location> getAllLocations()
         {
             List<Location> locations = new List<Location>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ID, LocationName FROM Locations";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = "SELECT ID, LocationName FROM Locations";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Location location = new Location
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),           // ID
-                                LocationName = reader.GetString(1) // LocationName
-                            };
-                            locations.Add(location);
+                                Location location = new Location
+                                {
+                                    ID = reader.GetInt32(0),
+                                    LocationName = reader.GetString(1)
+                                };
+                                locations.Add(location);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving locations: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving locations: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving locations: {ex.Message}", ex);
+            }
+
             return locations;
         }
 
         public void adoptPet(int petId, int userId)
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+            if (petId <= 0)
             {
-                connection.Open();
-                string query = "UPDATE Pets SET Status = 'Adopted', AdoptedByUserID = @userId WHERE ID = @petId";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                throw new ArgumentException("Pet ID must be greater than zero", nameof(petId));
+            }
+
+            if (userId <= 0)
+            {
+                throw new ArgumentException("User ID must be greater than zero", nameof(userId));
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@userId", userId);
-                    cmd.Parameters.AddWithValue("@petId", petId);
-                    cmd.ExecuteNonQuery();
+                    connection.Open();
+                    string query = "UPDATE Pets SET Status = 'Adopted', AdoptedByUserID = @userId WHERE ID = @petId AND Status = 'Available'";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        cmd.Parameters.AddWithValue("@petId", petId);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new InvalidOperationException($"Pet with ID {petId} is no longer available for adoption or does not exist.");
+                        }
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error adopting pet ID {petId}: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw ex; // Re-throw business logic exceptions as-is
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error adopting pet ID {petId}: {ex.Message}", ex);
             }
         }
 
         public void postPet(string name, int petTypeId, int breedId, int locationId, int age, decimal weight, string gender, string petStory, int postedByUserId, string b64Image)
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+            // Input validation
+            if (string.IsNullOrWhiteSpace(name))
             {
-                connection.Open();
-                string query = @"INSERT INTO Pets (Name, PetTypeID, BreedID, LocationID, Age, Weight, Gender, PetStory, Status, PostedByUserID, B64Image) 
-                                VALUES (@name, @petTypeId, @breedId, @locationId, @age, @weight, @gender, @petStory, 'Available', @postedByUserId, @b64Image)";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                throw new ArgumentException("Pet name cannot be empty", nameof(name));
+            }
+
+            if (petTypeId <= 0)
+            {
+                throw new ArgumentException("Pet type ID must be greater than zero", nameof(petTypeId));
+            }
+
+            if (breedId <= 0)
+            {
+                throw new ArgumentException("Breed ID must be greater than zero", nameof(breedId));
+            }
+
+            if (locationId <= 0)
+            {
+                throw new ArgumentException("Location ID must be greater than zero", nameof(locationId));
+            }
+
+            if (age < 0)
+            {
+                throw new ArgumentException("Age cannot be negative", nameof(age));
+            }
+
+            if (weight <= 0)
+            {
+                throw new ArgumentException("Weight must be greater than zero", nameof(weight));
+            }
+
+            if (string.IsNullOrWhiteSpace(gender))
+            {
+                throw new ArgumentException("Gender cannot be empty", nameof(gender));
+            }
+
+            if (string.IsNullOrWhiteSpace(petStory))
+            {
+                throw new ArgumentException("Pet story cannot be empty", nameof(petStory));
+            }
+
+            if (postedByUserId <= 0)
+            {
+                throw new ArgumentException("Posted by user ID must be greater than zero", nameof(postedByUserId));
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@petTypeId", petTypeId);
-                    cmd.Parameters.AddWithValue("@breedId", breedId);
-                    cmd.Parameters.AddWithValue("@locationId", locationId);
-                    cmd.Parameters.AddWithValue("@age", age);
-                    cmd.Parameters.AddWithValue("@weight", weight);
-                    cmd.Parameters.AddWithValue("@gender", gender);
-                    cmd.Parameters.AddWithValue("@petStory", petStory);
-                    cmd.Parameters.AddWithValue("@postedByUserId", postedByUserId);
-                    cmd.Parameters.AddWithValue("@b64Image", b64Image);
-                    cmd.ExecuteNonQuery();
+                    connection.Open();
+                    string query = @"INSERT INTO Pets (Name, PetTypeID, BreedID, LocationID, Age, Weight, Gender, PetStory, Status, PostedByUserID, B64Image) 
+                                    VALUES (@name, @petTypeId, @breedId, @locationId, @age, @weight, @gender, @petStory, 'Available', @postedByUserId, @b64Image)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@petTypeId", petTypeId);
+                        cmd.Parameters.AddWithValue("@breedId", breedId);
+                        cmd.Parameters.AddWithValue("@locationId", locationId);
+                        cmd.Parameters.AddWithValue("@age", age);
+                        cmd.Parameters.AddWithValue("@weight", weight);
+                        cmd.Parameters.AddWithValue("@gender", gender);
+                        cmd.Parameters.AddWithValue("@petStory", petStory);
+                        cmd.Parameters.AddWithValue("@postedByUserId", postedByUserId);
+                        cmd.Parameters.AddWithValue("@b64Image", b64Image ?? string.Empty);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new InvalidOperationException("Failed to create pet record.");
+                        }
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) // Foreign key constraint violation
+                {
+                    throw new InvalidOperationException("Invalid pet type, breed, location, or user ID provided.", ex);
+                }
+                throw new Exception($"Database error posting pet: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw ex; // Re-throw business logic exceptions as-is
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error posting pet: {ex.Message}", ex);
             }
         }
 
         public void makeDonation(int userId, decimal amount)
         {
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+            if (userId <= 0)
             {
-                connection.Open();
-                string query = "INSERT INTO Donations (UserID, Amount) VALUES (@userId, @amount)";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                throw new ArgumentException("User ID must be greater than zero", nameof(userId));
+            }
+
+            if (amount <= 0)
+            {
+                throw new ArgumentException("Donation amount must be greater than zero", nameof(amount));
+            }
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    cmd.Parameters.AddWithValue("@userId", userId);
-                    cmd.Parameters.AddWithValue("@amount", amount);
-                    cmd.ExecuteNonQuery();
+                    connection.Open();
+                    string query = "INSERT INTO Donations (UserID, Amount) VALUES (@userId, @amount)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        cmd.Parameters.AddWithValue("@amount", amount);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new InvalidOperationException("Failed to record donation.");
+                        }
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547) // Foreign key constraint violation
+                {
+                    throw new InvalidOperationException("Invalid user ID provided.", ex);
+                }
+                throw new Exception($"Database error making donation: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw ex; // Re-throw business logic exceptions as-is
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error making donation: {ex.Message}", ex);
             }
         }
 
         public List<Donation> getAllDonations()
         {
             List<Donation> donations = new List<Donation>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ID, UserID, Amount, DonationDate FROM Donations";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = "SELECT ID, UserID, Amount, DonationDate FROM Donations";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Donation donation = new Donation
+                            while (reader.Read())
                             {
-                                ID = reader.GetInt32(0),           // ID
-                                UserID = reader.GetInt32(1),       // UserID
-                                Amount = reader.GetDecimal(2),     // Amount
-                                DonationDate = reader.GetDateTime(3) // DonationDate
-                            };
-                            donations.Add(donation);
+                                Donation donation = new Donation
+                                {
+                                    ID = reader.GetInt32(0),
+                                    UserID = reader.GetInt32(1),
+                                    Amount = reader.GetDecimal(2),
+                                    DonationDate = reader.GetDateTime(3)
+                                };
+                                donations.Add(donation);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving donations: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving donations: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving donations: {ex.Message}", ex);
+            }
+
             return donations;
         }
 
         public decimal getTotalDonations()
         {
             decimal total = 0;
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT ISNULL(SUM(Amount), 0) FROM Donations";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    object result = cmd.ExecuteScalar();
-                    if (result != null && result != DBNull.Value)
+                    connection.Open();
+                    string query = "SELECT ISNULL(SUM(Amount), 0) FROM Donations";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        total = Convert.ToDecimal(result);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            total = Convert.ToDecimal(result);
+                        }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error calculating total donations: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error calculating total donations: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error calculating total donations: {ex.Message}", ex);
+            }
+
             return total;
         }
 
         public int getTotalAdoptions()
         {
             int total = 0;
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = "SELECT COUNT(*) FROM Pets WHERE Status = 'Adopted'";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    object result = cmd.ExecuteScalar();
-                    if (result != null && result != DBNull.Value)
+                    connection.Open();
+                    string query = "SELECT COUNT(*) FROM Pets WHERE Status = 'Adopted'";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        total = Convert.ToInt32(result);
+                        object result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            total = Convert.ToInt32(result);
+                        }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error calculating total adoptions: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error calculating total adoptions: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error calculating total adoptions: {ex.Message}", ex);
+            }
+
             return total;
         }
 
         public List<Pet> getAdoptedPets()
         {
             List<Pet> pets = new List<Pet>();
-            SqlConnection connection = new SqlConnection(ConnectionString);
-            using (connection)
+
+            try
             {
-                connection.Open();
-                string query = @"SELECT p.Name, u.FirstName, u.LastName
-                                FROM Pets p
-                                INNER JOIN Users u ON p.AdoptedByUserID = u.ID
-                                WHERE p.Status = 'Adopted'";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                using (cmd)
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    using (reader)
+                    connection.Open();
+                    string query = @"SELECT p.Name, u.FirstName, u.LastName
+                                    FROM Pets p
+                                    INNER JOIN Users u ON p.AdoptedByUserID = u.ID
+                                    WHERE p.Status = 'Adopted'";
+
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        while (reader.Read())
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            Pet pet = new Pet
+                            while (reader.Read())
                             {
-                                Name = reader.GetString(0),                // p.Name
-                                AdoptedByFirstName = reader.GetString(1),  // u.FirstName
-                                AdoptedByLastName = reader.GetString(2)    // u.LastName
-                            };
-                            pets.Add(pet);
+                                Pet pet = new Pet
+                                {
+                                    Name = reader.GetString(0),
+                                    AdoptedByFirstName = reader.GetString(1),
+                                    AdoptedByLastName = reader.GetString(2)
+                                };
+                                pets.Add(pet);
+                            }
                         }
                     }
                 }
             }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error retrieving adopted pets: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception($"Connection error retrieving adopted pets: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving adopted pets: {ex.Message}", ex);
+            }
+
             return pets;
         }
     }
