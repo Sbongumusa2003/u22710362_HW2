@@ -187,6 +187,7 @@
     <Content Include="Views\Home\Pets.cshtml" />
     <Content Include="Views\Home\Adopt.cshtml" />
     <Content Include="Views\Home\PostPet.cshtml" />
+    <Content Include="Views\Home\Donate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
