@@ -86,13 +86,13 @@
                                     <label for="breedId" class="form-label">
                                         <strong>Breed *</strong>
                                     </label>
-                                    <select name="breedId" id="breedId" class="form-control" required>
+                                    <select name="breedId" id="breedId" class="form-control" required onchange="filterPetBreeds()">
                                         <option value="">Select breed...</option>
                                         @if (Model.PetBreeds != null)
                                         {
                                             foreach (var breed in Model.PetBreeds)
                                             {
-                                                <option value="@breed.ID" data-pettype="@breed.PetTypeID" style="display: none;">@breed.BreedName</option>
+                                                <option value="@breed.ID">@breed.BreedName</option>
                                             }
                                         }
                                     </select>
