@@ -193,10 +193,10 @@ namespace u22710362_HW2.Models
                         {
                             User user = new User
                             {
-                                ID = reader.GetInt32("ID"),
-                                FirstName = reader.GetString("FirstName"),
-                                LastName = reader.GetString("LastName"),
-                                PhoneNumber = reader.GetString("PhoneNumber")
+                                ID = reader.GetInt32(0),
+                                FirstName = reader.GetString(1),
+                                LastName = reader.GetString(2),
+                                PhoneNumber = reader.GetString(3)
                             };
                             users.Add(user);
                         }
@@ -224,8 +224,8 @@ namespace u22710362_HW2.Models
                         {
                             PetType petType = new PetType
                             {
-                                ID = reader.GetInt32("ID"),
-                                TypeName = reader.GetString("TypeName")
+                                ID = reader.GetInt32(0),
+                                TypeName = reader.GetString(1)
                             };
                             petTypes.Add(petType);
                         }
@@ -253,9 +253,9 @@ namespace u22710362_HW2.Models
                         {
                             PetBreed petBreed = new PetBreed
                             {
-                                ID = reader.GetInt32("ID"),
-                                BreedName = reader.GetString("BreedName"),
-                                PetTypeID = reader.GetInt32("PetTypeID")
+                                ID = reader.GetInt32(0),
+                                BreedName = reader.GetString(1),
+                                PetTypeID = reader.GetInt32(2)
                             };
                             petBreeds.Add(petBreed);
                         }
@@ -448,7 +448,7 @@ namespace u22710362_HW2.Models
                         {
                             Pet pet = new Pet
                             {
-                                Name = reader.GetString("Name"),
+                                Name = reader.GetString(1),
                                 AdoptedByFirstName = reader.GetString("FirstName"),
                                 AdoptedByLastName = reader.GetString("LastName")
                             };
@@ -460,3 +460,4 @@ namespace u22710362_HW2.Models
             return pets;
         }
     }
+}
