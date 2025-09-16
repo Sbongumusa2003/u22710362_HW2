@@ -16,7 +16,7 @@ namespace u22710362_HW2.Controllers
         private DefaultDataService dataService = new DefaultDataService();
         public ActionResult Index()
         {
-            PetRecords petRecords = new PetRecords
+            PetRecordsVM petRecords = new PetRecordsVM
             {
                 Pets = dataService.getAdoptedPets(),
                 TotalAdoptions = dataService.getTotalAdoptions(),
@@ -27,7 +27,7 @@ namespace u22710362_HW2.Controllers
         }
         public ActionResult Pets()
         {
-            PetRecords petRecords = new PetRecords
+            PetRecordsVM petRecords = new PetRecordsVM
             {
                 Pets = dataService.getFilteredPets(typeFilter, breedFilter, locationFilter),
                 PetTypes = dataService.getAllPetTypes(),
@@ -49,7 +49,7 @@ namespace u22710362_HW2.Controllers
                 return RedirectToAction("Pets");
             }
 
-            PetRecords petRecords = new PetRecords
+            PetRecordsVM petRecords = new PetRecordsVM
             {
                 Users = dataService.getAllUsers()
             };
@@ -59,7 +59,7 @@ namespace u22710362_HW2.Controllers
         }
         public ActionResult PostPet()
         {
-            PetRecords petRecords = new PetRecords
+            PetRecordsVM petRecords = new PetRecordsVM
             {
                 Users = dataService.getAllUsers(),
                 PetTypes = dataService.getAllPetTypes(),
@@ -71,7 +71,7 @@ namespace u22710362_HW2.Controllers
         }
         public ActionResult Donate()
         {
-            PetRecords petRecords = new PetRecords
+            PetRecordsVM petRecords = new PetRecordsVM
             {
                 Users = dataService.getAllUsers(),
                 TotalDonations = dataService.getTotalDonations()
