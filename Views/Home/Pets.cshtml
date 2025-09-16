@@ -1,0 +1,207 @@
+﻿@model u22710362_HW2.Models.PetRecordsVM
+@{
+    ViewBag.Title = "Available Pets for Adoption";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px;">
+                <h1 class="display-4">🐾 Find Your Perfect Companion</h1>
+                <p class="lead">Browse through our available pets waiting for their forever homes</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 15px;">
+                <div class="card-header bg-primary text-white" style="border-radius: 15px 15px 0 0;">
+                    <h5 class="mb-0"><i class="fas fa-filter"></i> Filter Pets</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("SetPetFilter", "Home", FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        <div class="col-md-3">
+                            <label for="petType" class="form-label">Pet Type:</label>
+                            <select name="petType" id="petType" class="form-select" onchange="filterBreeds()">
+                                <option value="All" @(ViewBag.CurrentTypeFilter == "All" ? "selected" : "")>All Types</option>
+                                @if (Model.PetTypes != null)
+                                {
+                                    foreach (var type in Model.PetTypes)
+                                    {
+                                        <option value="@type.TypeName" @(ViewBag.CurrentTypeFilter == type.TypeName ? "selected" : "")>@type.TypeName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="breed" class="form-label">Breed:</label>
+                            <select name="breed" id="breed" class="form-select">
+                                <option value="All" @(ViewBag.CurrentBreedFilter == "All" ? "selected" : "")>All Breeds</option>
+                                @if (Model.PetBreeds != null)
+                                {
+                                    foreach (var breed in Model.PetBreeds)
+                                    {
+                                        <option value="@breed.BreedName" data-pettype="@(Model.PetTypes?.FirstOrDefault(t => t.ID == breed.PetTypeID)?.TypeName)" @(ViewBag.CurrentBreedFilter == breed.BreedName ? "selected" : "")>@breed.BreedName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="location" class="form-label">Location:</label>
+                            <select name="location" id="location" class="form-select">
+                                <option value="All" @(ViewBag.CurrentLocationFilter == "All" ? "selected" : "")>All Locations</option>
+                                @if (Model.Locations != null)
+                                {
+                                    foreach (var location in Model.Locations)
+                                    {
+                                        <option value="@location.LocationName" @(ViewBag.CurrentLocationFilter == location.LocationName ? "selected" : "")>@location.LocationName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button type="submit" class="btn btn-primary flex-fill">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                            @Html.ActionLink("Clear", "ClearFilters", "Home", null, new { @class = "btn btn-outline-secondary flex-fill" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pets Grid -->
+    <div class="row">
+        @if (Model.Pets != null && Model.Pets.Any())
+        {
+            foreach (var pet in Model.Pets)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm border-0 pet-card" style="border-radius: 15px; transition: transform 0.3s;">
+                        <div class="position-relative">
+                            <img src="data:image/jpeg;base64,@pet.B64Image" class="card-img-top" alt="@pet.Name" style="height: 250px; object-fit: cover; border-radius: 15px 15px 0 0;">
+                            <span class="badge position-absolute top-0 end-0 m-2 @(pet.Status == "Available" ? "bg-success" : "bg-secondary")">
+                                @pet.Status
+                            </span>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title text-primary mb-0">@pet.Name</h5>
+                                <small class="text-muted">@pet.PetTypeName</small>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted d-block"><i class="fas fa-map-marker-alt"></i> @pet.LocationName</small>
+                                    <small class="text-muted d-block"><i class="fas fa-birthday-cake"></i> @pet.Age years old</small>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted d-block"><i class="fas fa-weight"></i> @pet.Weight kg</small>
+                                    <small class="text-muted d-block"><i class="fas fa-venus-mars"></i> @pet.Gender</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="badge bg-info text-dark mb-2">@pet.BreedName</span>
+                            </div>
+
+                            <p class="card-text flex-grow-1" style="font-size: 0.9em;">
+                                @(pet.PetStory.Length > 100 ? pet.PetStory.Substring(0, 100) + "..." : pet.PetStory)
+                            </p>
+
+                            <div class="mt-auto">
+                                <small class="text-muted d-block mb-2">
+                                    <i class="fas fa-user"></i> Posted by @pet.PostedByFirstName @pet.PostedByLastName
+                                </small>
+
+                                @if (pet.Status == "Available")
+                                {
+                                    @Html.ActionLink("VIEW", "Adopt", "Home", new { id = pet.ID }, new { @class = "btn btn-primary w-100", @style = "border-radius: 25px;" })
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary w-100" disabled style="border-radius: 25px;">
+                                        <i class="fas fa-heart"></i> Adopted
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+                        <div class="card-body py-5">
+                            <i class="fas fa-search fa-5x text-muted mb-4"></i>
+                            <h3>No pets found</h3>
+                            <p class="text-muted">Try adjusting your filters or check back later for new arrivals!</p>
+                            @Html.ActionLink("Clear Filters", "ClearFilters", "Home", null, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <script>
+        function filterBreeds() {
+            var selectedType = document.getElementById('petType').value;
+            var breedSelect = document.getElementById('breed');
+            var options = breedSelect.options;
+
+            for (var i = 1; i < options.length; i++) {
+                var option = options[i];
+                var petType = option.getAttribute('data-pettype');
+
+                if (selectedType === 'All' || petType === selectedType) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            }
+
+            // Reset breed selection if current selection is not valid for the new type
+            if (selectedType !== 'All') {
+                var currentBreed = breedSelect.value;
+                var isValidBreed = false;
+                for (var i = 1; i < options.length; i++) {
+                    if (options[i].value === currentBreed && options[i].getAttribute('data-pettype') === selectedType) {
+                        isValidBreed = true;
+                        break;
+                    }
+                }
+                if (!isValidBreed) {
+                    breedSelect.value = 'All';
+                }
+            }
+        }
+
+        // Add hover effect to pet cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const petCards = document.querySelectorAll('.pet-card');
+            petCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+}
