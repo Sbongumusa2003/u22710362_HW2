@@ -43,21 +43,21 @@ namespace u22710362_HW2.Models
                         {
                             Pet pet = new Pet
                             {
-                                ID = reader.GetInt32("ID"),
-                                Name = reader.GetString("Name"),
-                                Age = reader.GetInt32("Age"),
-                                Weight = reader.GetDecimal("Weight"),
-                                Gender = reader.GetString("Gender"),
-                                PetStory = reader.GetString("PetStory"),
-                                Status = reader.GetString("Status"),
-                                B64Image = reader.GetString("B64Image"),
-                                PetTypeName = reader.GetString("TypeName"),
-                                BreedName = reader.GetString("BreedName"),
-                                LocationName = reader.GetString("LocationName"),
-                                PostedByFirstName = reader.GetString("PostedByFirstName"),
-                                PostedByLastName = reader.GetString("PostedByLastName"),
-                                AdoptedByFirstName = reader.IsDBNull("AdoptedByFirstName") ? null : reader.GetString("AdoptedByFirstName"),
-                                AdoptedByLastName = reader.IsDBNull("AdoptedByLastName") ? null : reader.GetString("AdoptedByLastName")
+                                ID = reader.GetInt32(0),              // p.ID
+                                Name = reader.GetString(1),           // p.Name
+                                Age = reader.GetInt32(2),             // p.Age
+                                Weight = reader.GetDecimal(3),        // p.Weight
+                                Gender = reader.GetString(4),         // p.Gender
+                                PetStory = reader.GetString(5),       // p.PetStory
+                                Status = reader.GetString(6),         // p.Status
+                                B64Image = reader.GetString(7),       // p.B64Image
+                                PetTypeName = reader.GetString(8),    // pt.TypeName
+                                BreedName = reader.GetString(9),      // pb.BreedName
+                                LocationName = reader.GetString(10), // l.LocationName
+                                PostedByFirstName = reader.GetString(11), // u1.FirstName
+                                PostedByLastName = reader.GetString(12),  // u1.LastName
+                                AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13), // u2.FirstName
+                                AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)   // u2.LastName
                             };
                             pets.Add(pet);
                         }
@@ -102,21 +102,21 @@ namespace u22710362_HW2.Models
                         {
                             Pet pet = new Pet
                             {
-                                ID = reader.GetInt32("ID"),
-                                Name = reader.GetString("Name"),
-                                Age = reader.GetInt32("Age"),
-                                Weight = reader.GetDecimal("Weight"),
-                                Gender = reader.GetString("Gender"),
-                                PetStory = reader.GetString("PetStory"),
-                                Status = reader.GetString("Status"),
-                                B64Image = reader.GetString("B64Image"),
-                                PetTypeName = reader.GetString("TypeName"),
-                                BreedName = reader.GetString("BreedName"),
-                                LocationName = reader.GetString("LocationName"),
-                                PostedByFirstName = reader.GetString("PostedByFirstName"),
-                                PostedByLastName = reader.GetString("PostedByLastName"),
-                                AdoptedByFirstName = reader.IsDBNull("AdoptedByFirstName") ? null : reader.GetString("AdoptedByFirstName"),
-                                AdoptedByLastName = reader.IsDBNull("AdoptedByLastName") ? null : reader.GetString("AdoptedByLastName")
+                                ID = reader.GetInt32(0),              // p.ID
+                                Name = reader.GetString(1),           // p.Name
+                                Age = reader.GetInt32(2),             // p.Age
+                                Weight = reader.GetDecimal(3),        // p.Weight
+                                Gender = reader.GetString(4),         // p.Gender
+                                PetStory = reader.GetString(5),       // p.PetStory
+                                Status = reader.GetString(6),         // p.Status
+                                B64Image = reader.GetString(7),       // p.B64Image
+                                PetTypeName = reader.GetString(8),    // pt.TypeName
+                                BreedName = reader.GetString(9),      // pb.BreedName
+                                LocationName = reader.GetString(10), // l.LocationName
+                                PostedByFirstName = reader.GetString(11), // u1.FirstName
+                                PostedByLastName = reader.GetString(12),  // u1.LastName
+                                AdoptedByFirstName = reader.IsDBNull(13) ? null : reader.GetString(13), // u2.FirstName
+                                AdoptedByLastName = reader.IsDBNull(14) ? null : reader.GetString(14)   // u2.LastName
                             };
                             pets.Add(pet);
                         }
@@ -154,19 +154,19 @@ namespace u22710362_HW2.Models
                         {
                             pet = new Pet
                             {
-                                ID = reader.GetInt32("ID"),
-                                Name = reader.GetString("Name"),
-                                Age = reader.GetInt32("Age"),
-                                Weight = reader.GetDecimal("Weight"),
-                                Gender = reader.GetString("Gender"),
-                                PetStory = reader.GetString("PetStory"),
-                                Status = reader.GetString("Status"),
-                                B64Image = reader.GetString("B64Image"),
-                                PetTypeName = reader.GetString("TypeName"),
-                                BreedName = reader.GetString("BreedName"),
-                                LocationName = reader.GetString("LocationName"),
-                                PostedByFirstName = reader.GetString("PostedByFirstName"),
-                                PostedByLastName = reader.GetString("PostedByLastName")
+                                ID = reader.GetInt32(0),              // p.ID
+                                Name = reader.GetString(1),           // p.Name
+                                Age = reader.GetInt32(2),             // p.Age
+                                Weight = reader.GetDecimal(3),        // p.Weight
+                                Gender = reader.GetString(4),         // p.Gender
+                                PetStory = reader.GetString(5),       // p.PetStory
+                                Status = reader.GetString(6),         // p.Status
+                                B64Image = reader.GetString(7),       // p.B64Image
+                                PetTypeName = reader.GetString(8),    // pt.TypeName
+                                BreedName = reader.GetString(9),      // pb.BreedName
+                                LocationName = reader.GetString(10), // l.LocationName
+                                PostedByFirstName = reader.GetString(11), // u1.FirstName
+                                PostedByLastName = reader.GetString(12)   // u1.LastName
                             };
                         }
                     }
@@ -193,10 +193,10 @@ namespace u22710362_HW2.Models
                         {
                             User user = new User
                             {
-                                ID = reader.GetInt32("ID"),
-                                FirstName = reader.GetString("FirstName"),
-                                LastName = reader.GetString("LastName"),
-                                PhoneNumber = reader.GetString("PhoneNumber")
+                                ID = reader.GetInt32(0),         // ID
+                                FirstName = reader.GetString(1), // FirstName
+                                LastName = reader.GetString(2),  // LastName
+                                PhoneNumber = reader.GetString(3) // PhoneNumber
                             };
                             users.Add(user);
                         }
@@ -224,8 +224,8 @@ namespace u22710362_HW2.Models
                         {
                             PetType petType = new PetType
                             {
-                                ID = reader.GetInt32("ID"),
-                                TypeName = reader.GetString("TypeName")
+                                ID = reader.GetInt32(0),        // ID
+                                TypeName = reader.GetString(1)  // TypeName
                             };
                             petTypes.Add(petType);
                         }
@@ -253,9 +253,9 @@ namespace u22710362_HW2.Models
                         {
                             PetBreed petBreed = new PetBreed
                             {
-                                ID = reader.GetInt32("ID"),
-                                BreedName = reader.GetString("BreedName"),
-                                PetTypeID = reader.GetInt32("PetTypeID")
+                                ID = reader.GetInt32(0),        // ID
+                                BreedName = reader.GetString(1), // BreedName
+                                PetTypeID = reader.GetInt32(2)   // PetTypeID
                             };
                             petBreeds.Add(petBreed);
                         }
@@ -283,8 +283,8 @@ namespace u22710362_HW2.Models
                         {
                             Location location = new Location
                             {
-                                ID = reader.GetInt32("ID"),
-                                LocationName = reader.GetString("LocationName")
+                                ID = reader.GetInt32(0),           // ID
+                                LocationName = reader.GetString(1) // LocationName
                             };
                             locations.Add(location);
                         }
@@ -372,10 +372,10 @@ namespace u22710362_HW2.Models
                         {
                             Donation donation = new Donation
                             {
-                                ID = reader.GetInt32("ID"),
-                                UserID = reader.GetInt32("UserID"),
-                                Amount = reader.GetDecimal("Amount"),
-                                DonationDate = reader.GetDateTime("DonationDate")
+                                ID = reader.GetInt32(0),           // ID
+                                UserID = reader.GetInt32(1),       // UserID
+                                Amount = reader.GetDecimal(2),     // Amount
+                                DonationDate = reader.GetDateTime(3) // DonationDate
                             };
                             donations.Add(donation);
                         }
@@ -448,9 +448,9 @@ namespace u22710362_HW2.Models
                         {
                             Pet pet = new Pet
                             {
-                                Name = reader.GetString("Name"),
-                                AdoptedByFirstName = reader.GetString("FirstName"),
-                                AdoptedByLastName = reader.GetString("LastName")
+                                Name = reader.GetString(0),                // p.Name
+                                AdoptedByFirstName = reader.GetString(1),  // u.FirstName
+                                AdoptedByLastName = reader.GetString(2)    // u.LastName
                             };
                             pets.Add(pet);
                         }
