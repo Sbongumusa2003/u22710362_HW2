@@ -9,14 +9,11 @@ namespace u22710362_HW2.Controllers
 {
     public class HomeController : Controller
     {
-        // Filters for pets
         public static String typeFilter = "All";
         public static String breedFilter = "All";
         public static String locationFilter = "All";
 
         private DefaultDataService dataService = new DefaultDataService();
-
-        // Home page
         public ActionResult Index()
         {
             PetRecordsVM petRecords = new PetRecordsVM
