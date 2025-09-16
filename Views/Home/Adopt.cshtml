@@ -1,4 +1,5 @@
 ﻿@model u22710362_HW2.Models.PetRecordsVM
+
 @{
     ViewBag.Title = "Adopt " + ViewBag.Pet.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,7 +25,6 @@
                 </div>
                 <div class="card-body p-0">
                     <img src="data:image/jpeg;base64,@pet.B64Image" alt="@pet.Name" class="w-100" style="height: 350px; object-fit: cover;">
-
                     <div class="p-4">
                         <div class="row mb-3">
                             <div class="col-6">
@@ -56,16 +56,13 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="mb-3">
                             <span class="badge bg-info text-dark fs-6">@pet.BreedName</span>
                         </div>
-
                         <div class="mb-3">
                             <h5 class="text-primary"><i class="fas fa-book-open"></i> @pet.Name's Story</h5>
                             <p class="text-muted" style="line-height: 1.6;">@pet.PetStory</p>
                         </div>
-
                         <div class="alert alert-info" role="alert">
                             <i class="fas fa-info-circle"></i>
                             <strong>Posted by:</strong> @pet.PostedByFirstName @pet.PostedByLastName
@@ -105,9 +102,7 @@
                                     }
                                 }
                             </select>
-                            <div class="invalid-feedback">
-                                Please select your name from the list.
-                            </div>
+                            <div class="invalid-feedback">Please select your name from the list.</div>
                         </div>
 
                         <div class="mb-4">
@@ -157,6 +152,7 @@
 
         function confirmAdoption(petName) {
             var userSelect = document.getElementById('userId');
+
             if (!userSelect.value) {
                 alert('Please select your name before adopting.');
                 return false;
@@ -166,12 +162,12 @@
         }
 
         // Bootstrap form validation
-        (function() {
+        (function () {
             'use strict';
-            window.addEventListener('load', function() {
+            window.addEventListener('load', function () {
                 var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function(form) {
-                    form.addEventListener('submit', function(event) {
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
                         if (form.checkValidity() === false) {
                             event.preventDefault();
                             event.stopPropagation();
@@ -182,7 +178,6 @@
             }, false);
         })();
     </script>
-
     <style>
         .info-item {
             margin-bottom: 8px;

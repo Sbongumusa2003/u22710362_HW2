@@ -1,4 +1,5 @@
 ﻿@model u22710362_HW2.Models.PetRecordsVM
+
 @{
     ViewBag.Title = "Available Pets for Adoption";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -97,7 +98,6 @@
                                 <h5 class="card-title text-primary mb-0">@pet.Name</h5>
                                 <small class="text-muted">@pet.PetTypeName</small>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-6">
                                     <small class="text-muted d-block"><i class="fas fa-map-marker-alt"></i> @pet.LocationName</small>
@@ -108,20 +108,16 @@
                                     <small class="text-muted d-block"><i class="fas fa-venus-mars"></i> @pet.Gender</small>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <span class="badge bg-info text-dark mb-2">@pet.BreedName</span>
                             </div>
-
                             <p class="card-text flex-grow-1" style="font-size: 0.9em;">
                                 @(pet.PetStory.Length > 100 ? pet.PetStory.Substring(0, 100) + "..." : pet.PetStory)
                             </p>
-
                             <div class="mt-auto">
                                 <small class="text-muted d-block mb-2">
                                     <i class="fas fa-user"></i> Posted by @pet.PostedByFirstName @pet.PostedByLastName
                                 </small>
-
                                 @if (pet.Status == "Available")
                                 {
                                     @Html.ActionLink("VIEW", "Adopt", "Home", new { id = pet.ID }, new { @class = "btn btn-primary w-100", @style = "border-radius: 25px;" })
@@ -179,12 +175,14 @@
             if (selectedType !== 'All') {
                 var currentBreed = breedSelect.value;
                 var isValidBreed = false;
+
                 for (var i = 1; i < options.length; i++) {
                     if (options[i].value === currentBreed && options[i].getAttribute('data-pettype') === selectedType) {
                         isValidBreed = true;
                         break;
                     }
                 }
+
                 if (!isValidBreed) {
                     breedSelect.value = 'All';
                 }
@@ -192,13 +190,13 @@
         }
 
         // Add hover effect to pet cards
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const petCards = document.querySelectorAll('.pet-card');
             petCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
+                card.addEventListener('mouseenter', function () {
                     this.style.transform = 'translateY(-5px)';
                 });
-                card.addEventListener('mouseleave', function() {
+                card.addEventListener('mouseleave', function () {
                     this.style.transform = 'translateY(0)';
                 });
             });

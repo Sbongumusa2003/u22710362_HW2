@@ -503,14 +503,6 @@ namespace u22710362_HW2.Models
                     }
                 }
             }
-            catch (SqlException ex)
-            {
-                if (ex.Number == 547) // Foreign key constraint violation
-                {
-                    throw new InvalidOperationException("Invalid user ID provided.", ex);
-                }
-                throw new Exception($"Database error making donation: {ex.Message}", ex);
-            }
             catch (Exception ex)
             {
                 throw new Exception($"Unexpected error making donation: {ex.Message}", ex);
