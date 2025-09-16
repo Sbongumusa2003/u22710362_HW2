@@ -6,65 +6,43 @@
     var pet = (u22710362_HW2.Models.Pet)ViewBag.Pet;
 }
 
-<div class="container">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="text-center py-4" style="background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%); color: white; border-radius: 15px;">
-                <h1 class="display-4">💚 Adopt @pet.Name</h1>
-                <p class="lead">Give @pet.Name a loving forever home</p>
-            </div>
-        </div>
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <h1>Adopt @pet.Name</h1>
+        <p class="lead text-muted">Give @pet.Name a loving forever home</p>
     </div>
 
     <div class="row">
         <!-- Pet Information -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 15px;">
-                <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
-                    <h4 class="mb-0"><i class="fas fa-paw"></i> Meet @pet.Name</h4>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Meet @pet.Name</h4>
                 </div>
                 <div class="card-body p-0">
-                    <img src="data:image/jpeg;base64,@pet.B64Image" alt="@pet.Name" class="w-100" style="height: 350px; object-fit: cover;">
-                    <div class="p-4">
+                    <img src="data:image/jpeg;base64,@pet.B64Image" alt="@pet.Name" class="w-100" style="height: 300px; object-fit: cover;">
+                    <div class="p-3">
                         <div class="row mb-3">
                             <div class="col-6">
-                                <div class="info-item">
-                                    <i class="fas fa-tag text-primary"></i>
-                                    <strong>Name:</strong> @pet.Name
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-birthday-cake text-primary"></i>
-                                    <strong>Age:</strong> @pet.Age years old
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-weight text-primary"></i>
-                                    <strong>Weight:</strong> @pet.Weight kg
-                                </div>
+                                <p><strong>Name:</strong> @pet.Name</p>
+                                <p><strong>Age:</strong> @pet.Age years old</p>
+                                <p><strong>Weight:</strong> @pet.Weight kg</p>
                             </div>
                             <div class="col-6">
-                                <div class="info-item">
-                                    <i class="fas fa-venus-mars text-primary"></i>
-                                    <strong>Gender:</strong> @pet.Gender
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-map-marker-alt text-primary"></i>
-                                    <strong>Location:</strong> @pet.LocationName
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-heart text-primary"></i>
-                                    <strong>Type:</strong> @pet.PetTypeName
-                                </div>
+                                <p><strong>Gender:</strong> @pet.Gender</p>
+                                <p><strong>Location:</strong> @pet.LocationName</p>
+                                <p><strong>Type:</strong> @pet.PetTypeName</p>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <span class="badge bg-info text-dark fs-6">@pet.BreedName</span>
+                            <p><strong>Breed:</strong> <span class="badge badge-info">@pet.BreedName</span></p>
                         </div>
                         <div class="mb-3">
-                            <h5 class="text-primary"><i class="fas fa-book-open"></i> @pet.Name's Story</h5>
-                            <p class="text-muted" style="line-height: 1.6;">@pet.PetStory</p>
+                            <h6><strong>@pet.Name's Story:</strong></h6>
+                            <p class="text-muted">@pet.PetStory</p>
                         </div>
-                        <div class="alert alert-info" role="alert">
-                            <i class="fas fa-info-circle"></i>
+                        <div class="alert alert-info">
                             <strong>Posted by:</strong> @pet.PostedByFirstName @pet.PostedByLastName
                         </div>
                     </div>
@@ -73,26 +51,25 @@
         </div>
 
         <!-- Adoption Form -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 15px;">
-                <div class="card-header bg-success text-white text-center" style="border-radius: 15px 15px 0 0;">
-                    <h4 class="mb-0"><i class="fas fa-heart"></i> Adoption Application</h4>
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Adoption Form</h4>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-warning" role="alert">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <strong>Important:</strong> By submitting this form, you're committing to provide @pet.Name with a loving, safe, and permanent home. Please ensure you're ready for this responsibility.
+                    <div class="alert alert-warning">
+                        <strong>Important:</strong> By submitting this form, you're committing to provide @pet.Name with a loving, safe, and permanent home.
                     </div>
 
-                    @using (Html.BeginForm("AdoptPet", "Home", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                    @using (Html.BeginForm("AdoptPet", "Home", FormMethod.Post))
                     {
                         @Html.Hidden("petId", pet.ID)
 
-                        <div class="mb-4">
+                        <div class="form-group mb-3">
                             <label for="userId" class="form-label">
-                                <i class="fas fa-user"></i> Your Full Name <span class="text-danger">*</span>
+                                <strong>Your Full Name *</strong>
                             </label>
-                            <select name="userId" id="userId" class="form-select" required onchange="updatePhoneNumber()">
+                            <select name="userId" id="userId" class="form-control" required onchange="updatePhoneNumber()">
                                 <option value="">Select your name...</option>
                                 @if (Model.Users != null)
                                 {
@@ -102,30 +79,26 @@
                                     }
                                 }
                             </select>
-                            <div class="invalid-feedback">Please select your name from the list.</div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="form-group mb-4">
                             <label for="phoneNumber" class="form-label">
-                                <i class="fas fa-phone"></i> Phone Number
+                                <strong>Phone Number</strong>
                             </label>
-                            <input type="text" id="phoneNumber" class="form-control" readonly placeholder="Will be auto-filled based on selected name">
-                            <small class="form-text text-muted">Your phone number will be automatically filled when you select your name.</small>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="card border-primary">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title text-primary">Ready to Adopt @pet.Name?</h5>
-                                    <p class="card-text">By clicking the button below, you agree to provide @pet.Name with love, care, and a permanent home.</p>
-                                    <button type="submit" class="btn btn-success btn-lg px-5 py-3" style="border-radius: 50px; font-weight: bold;" onclick="return confirmAdoption('@pet.Name')">
-                                        <i class="fas fa-heart"></i> Adopt Now
-                                    </button>
-                                </div>
-                            </div>
+                            <input type="text" id="phoneNumber" class="form-control" readonly placeholder="Auto-filled based on selected name">
+                            <small class="form-text text-muted">Automatically filled when you select your name</small>
                         </div>
 
                         <div class="text-center">
+                            <div class="card border-success mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">Ready to Adopt @pet.Name?</h5>
+                                    <p class="card-text">By clicking the button below, you agree to provide @pet.Name with love, care, and a permanent home.</p>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-lg btn-block mb-3" onclick="return confirmAdoption('@pet.Name')">
+                                Adopt Now
+                            </button>
                             @Html.ActionLink("← Back to Pet List", "Pets", "Home", null, new { @class = "btn btn-outline-primary" })
                         </div>
                     }
@@ -136,7 +109,6 @@
 </div>
 
 @section scripts {
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
     <script>
         function updatePhoneNumber() {
             var userSelect = document.getElementById('userId');
@@ -160,42 +132,29 @@
 
             return confirm('Are you sure you want to adopt ' + petName + '? This is a commitment to provide a loving home for this pet.');
         }
-
-        // Bootstrap form validation
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
     </script>
-    <style>
-        .info-item {
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-        }
-
-            .info-item i {
-                margin-right: 8px;
-                width: 16px;
-            }
-
-        .card {
-            transition: box-shadow 0.3s ease;
-        }
-
-            .card:hover {
-                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            }
-    </style>
 }
+
+<style>
+    .card {
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .btn-block {
+        width: 100%;
+    }
+
+    p {
+        margin-bottom: 0.5rem;
+    }
+</style>
